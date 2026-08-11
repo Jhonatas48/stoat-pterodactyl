@@ -1,0 +1,132 @@
+{
+  "_comment": "DO NOT EDIT: FILE GENERATED FOR PTERODACTYL PANEL",
+  "meta": {
+    "version": "PTDL_v2",
+    "update_url": null
+  },
+  "exported_at": "2026-08-11T15:00:00-03:00",
+  "name": "Stoat Development All-in-One",
+  "author": "jhonatas48",
+  "description": "Ambiente de desenvolvimento do backend Stoat com MongoDB Replica Set, Redis, RabbitMQ e MinIO no mesmo container. Sem Docker Compose e sem mise. LiveKit desabilitado.",
+  "features": null,
+  "docker_images": {
+    "Stoat Development": "ghcr.io/SEU_USUARIO/stoat-pterodactyl-dev:latest"
+  },
+  "file_denylist": [],
+  "startup": "bash /home/container/scripts/start.sh",
+  "config": {
+    "files": "{}",
+    "startup": "{\"done\": \"[stoat-dev] iniciando infraestrutura e serviços Stoat\"}",
+    "logs": "{}",
+    "stop": "^C"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\nset -e\ncd /mnt/server\nmkdir -p scripts supervisor .data\ncp -R /opt/stoat-template/scripts/. scripts/\ncp -R /opt/stoat-template/supervisor/. supervisor/\nchmod +x scripts/*.sh\nif [ -d source/.git ]; then\n  git -C source fetch origin \"${GIT_BRANCH}\"\n  git -C source checkout \"${GIT_BRANCH}\"\n  git -C source merge --ff-only \"origin/${GIT_BRANCH}\"\nelse\n  rm -rf source\n  git clone --depth 1 --branch \"${GIT_BRANCH}\" \"${GIT_REPOSITORY}\" source\nfi\necho 'Instalação concluída. A compilação ocorrerá no primeiro início.'\n",
+      "container": "ghcr.io/SEU_USUARIO/stoat-pterodactyl-dev:latest",
+      "entrypoint": "bash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Repositório Git",
+      "description": "URL HTTPS do seu fork do backend Stoat.",
+      "env_variable": "GIT_REPOSITORY",
+      "default_value": "https://github.com/stoatchat/stoatchat.git",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:255",
+      "field_type": "text"
+    },
+    {
+      "name": "Branch Git",
+      "description": "Branch que será instalada e desenvolvida.",
+      "env_variable": "GIT_BRANCH",
+      "default_value": "main",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:100",
+      "field_type": "text"
+    },
+    {
+      "name": "Host público",
+      "description": "Domínio ou IP usado nas URLs retornadas pela API.",
+      "env_variable": "PUBLIC_HOST",
+      "default_value": "127.0.0.1",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:255",
+      "field_type": "text"
+    },
+    {
+      "name": "Esquema HTTP",
+      "description": "Use https quando houver proxy TLS.",
+      "env_variable": "PUBLIC_SCHEME",
+      "default_value": "http",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|in:http,https",
+      "field_type": "text"
+    },
+    {
+      "name": "Esquema WebSocket",
+      "description": "Use wss quando houver proxy TLS.",
+      "env_variable": "PUBLIC_WS_SCHEME",
+      "default_value": "ws",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|in:ws,wss",
+      "field_type": "text"
+    },
+    {
+      "name": "Compilar ao iniciar",
+      "description": "1 recompila; 0 usa os binários existentes.",
+      "env_variable": "BUILD_ON_START",
+      "default_value": "1",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|in:0,1",
+      "field_type": "text"
+    },
+    {
+      "name": "Atualizar Git ao iniciar",
+      "description": "Mantenha 0 durante edição pelo VS Code para não sobrescrever trabalho.",
+      "env_variable": "PULL_ON_START",
+      "default_value": "0",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|in:0,1",
+      "field_type": "text"
+    },
+    {
+      "name": "Jobs do Cargo",
+      "description": "Número máximo de compilações paralelas.",
+      "env_variable": "CARGO_BUILD_JOBS",
+      "default_value": "2",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|integer|min:1|max:16",
+      "field_type": "text"
+    },
+    {
+      "name": "Logs Rust",
+      "description": "Nível de detalhamento dos logs do backend.",
+      "env_variable": "RUST_LOG",
+      "default_value": "info",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:50",
+      "field_type": "text"
+    },
+    {
+      "name": "Ativar pushd",
+      "description": "Não é necessário para desenvolvimento de interações.",
+      "env_variable": "ENABLE_PUSHD",
+      "default_value": "0",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|in:0,1",
+      "field_type": "text"
+    }
+  ]
+}
