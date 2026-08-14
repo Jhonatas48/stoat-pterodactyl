@@ -1,10 +1,10 @@
-#!/usr/bin/env bash
+-#!/usr/bin/env bash
 set -Eeuo pipefail
 
 cd /home/container
 
 export HOME=/home/container
-export CARGO_HOME=/opt/cargo
+export CARGO_HOME==/home/container/.cargo
 export RUSTUP_HOME=/opt/rustup
 export PATH="/opt/cargo/bin:$PATH"
 export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-2}"
@@ -82,6 +82,9 @@ if [[ "${BUILD_ON_START:-1}" == "1" || ! -x source/target/debug/revolt-delta ]];
     (cd source && cargo build)
     log "backend compilado"
 fi
+if [ -f /home/container/.erlang.cookie ]; then
+    chmod 600 /home/container/.erlang.cookie
+fi
 
 export RABBITMQ_MNESIA_BASE=/home/container/.data/rabbitmq/mnesia
 export RABBITMQ_LOG_BASE=/home/container/.data/rabbitmq/log
@@ -95,4 +98,5 @@ export ENABLE_PUSHD="${ENABLE_PUSHD:-0}"
 
 log "iniciando infraestrutura e serviços Stoat"
 exec supervisord -n -c /home/container/supervisor/supervisord.conf
+
 

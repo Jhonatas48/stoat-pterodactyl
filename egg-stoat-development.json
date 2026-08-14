@@ -6,11 +6,11 @@
   },
   "exported_at": "2026-08-11T15:00:00-03:00",
   "name": "Stoat Development All-in-One",
-  "author": "jhonatas48",
+  "author": "jhonatastomaz.digital@gmail.com",
   "description": "Ambiente de desenvolvimento do backend Stoat com MongoDB Replica Set, Redis, RabbitMQ e MinIO no mesmo container. Sem Docker Compose e sem mise. LiveKit desabilitado.",
   "features": null,
   "docker_images": {
-    "Stoat Development": "ghcr.io/SEU_USUARIO/stoat-pterodactyl-dev:latest"
+    "Stoat Development": "ghcr.io/jhonatas48/stoat-pterodactyl-dev:latest"
   },
   "file_denylist": [],
   "startup": "bash /home/container/scripts/start.sh",
@@ -23,7 +23,7 @@
   "scripts": {
     "installation": {
       "script": "#!/bin/bash\nset -e\ncd /mnt/server\nmkdir -p scripts supervisor .data\ncp -R /opt/stoat-template/scripts/. scripts/\ncp -R /opt/stoat-template/supervisor/. supervisor/\nchmod +x scripts/*.sh\nif [ -d source/.git ]; then\n  git -C source fetch origin \"${GIT_BRANCH}\"\n  git -C source checkout \"${GIT_BRANCH}\"\n  git -C source merge --ff-only \"origin/${GIT_BRANCH}\"\nelse\n  rm -rf source\n  git clone --depth 1 --branch \"${GIT_BRANCH}\" \"${GIT_REPOSITORY}\" source\nfi\necho 'Instalação concluída. A compilação ocorrerá no primeiro início.'\n",
-      "container": "ghcr.io/SEU_USUARIO/stoat-pterodactyl-dev:latest",
+      "container": "ghcr.io/jhonatas48/stoat-pterodactyl-dev:latest",
       "entrypoint": "bash"
     }
   },
